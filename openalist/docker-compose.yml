@@ -8,7 +8,6 @@ services:
       - ./cache:C:/cache
       - ./recycle:C:/recycle
       - ./storage:C:/storage:ro
-    user: '1000:1000'
     ports:
       - '5244:5244'
       - '5245:5245'
