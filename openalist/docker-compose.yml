@@ -1,13 +1,13 @@
 services:
   openlist:
+    image: openlist-windows:latest
     build:
       context: .
     restart: always
     volumes:
       - ./data:C:/app/data
       - ./cache:C:/cache
-      - ./recycle:C:/recycle
-      - ./storage:C:/storage:ro
+      - ./storage:C:/storage
     ports:
       - '5244:5244'
       - '5245:5245'
