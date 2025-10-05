@@ -1,0 +1,73 @@
+# Docker Compose file for Cloudflare DDNS on Windows Container
+# Source: https://github.com/favonia/cloudflare-ddns/
+
+services:
+  cloudflare-ddns:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+      args:
+        - GIT_DESCRIBE=1.15.1
+        - REPO_URL=https://github.com/favonia/cloudflare-ddns.git
+        - REPO_BRANCH=main
+    
+    image: cloudflare-ddns:windows
+    
+    container_name: cloudflare-ddns
+    
+    restart: unless-stopped
+    
+    # Environment variables for configuration
+    environment:
+      # Required: Your Cloudflare API token
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      
+      # Required: Domains to update (comma-separated)
+      # Example: example.org,www.example.org,*.example.org
+      - DOMAINS=${DOMAINS}
+      
+      # Optional: Enable Cloudflare proxy (orange cloud)
+      # Set to "true" to hide your IP and enable CDN
+      - PROXIED=${PROXIED:-false}
+      
+      # Optional: IP detection settings
+      # - IP4_PROVIDER=cloudflare.trace  # Default IPv4 provider
+      # - IP6_PROVIDER=cloudflare.trace  # Default IPv6 provider
+      # - IP6_PROVIDER=none              # Disable IPv6 completely
+      
+      # Optional: Update frequency (default: 5m)
+      # - UPDATE_CRON=@every 5m
+      
+      # Optional: Detection frequency (default: 1s)
+      # - DETECTION_TIMEOUT=5s
+      
+      # Optional: TTL for DNS records (1 = auto, 120-86400 seconds)
+      # - TTL=1
+      
+      # Optional: DNS record comment
+      # - RECORD_COMMENT=Updated by Cloudflare DDNS
+      
+      # Optional: Delete old records on first run
+      # - DELETE_ON_STOP=false
+      
+      # Optional: Enable quiet mode (less verbose logging)
+      # - QUIET=false
+      
+      # Optional: Healthchecks.io integration
+      # - HEALTHCHECKS=https://hc-ping.com/your-uuid-here
+      
+      # Optional: Uptime Kuma integration
+      # - UPTIMEKUMA=http://your-uptime-kuma:3001/api/push/xxxxx
+      
+      # Optional: Shoutrrr notification URL
+      # - SHOUTRRR=discord://token@id,telegram://token@chatid
+
+    # Optional: Use a .env file for sensitive data
+    # env_file:
+    #   - .env
+
+# Example .env file content:
+# CLOUDFLARE_API_TOKEN=your_token_here
+# DOMAINS=example.com,www.example.com
+# PROXIED=true
